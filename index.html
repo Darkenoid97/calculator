@@ -4,6 +4,7 @@
 <head>
     <title>Calculator</title>
     <link rel="icon" type="image/png" href="https://cdn.jim-nielsen.com/ios/512/calculator-2017-10-10.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script>
         function renderItem() {
             fetch('https://source.unsplash.com/1920x1080').then((response) => {
@@ -58,6 +59,25 @@
             font-size: 18px;
             display: block;
             margin-bottom: 14px;
+        }
+
+        @media only screen and (max-width: 600px) {
+            input {
+                width: 90%;
+                height: 60px;
+                font-size: 40px;
+            }
+
+            #voorgrond {
+                margin-top: 10%;
+                padding: 50px 0px;
+                background-color: rgba(255, 255, 255, 0.7);
+            }
+
+            label {
+                font-size: 18px;
+                margin-bottom: 14px;
+            }
         }
 
     </style>
