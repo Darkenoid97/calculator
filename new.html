@@ -189,21 +189,33 @@
         <label class="reslutaatLabel">Resultaat</label>
         <input id="resultaat" readonly>
         <input id="resultaatMobile" readonly>
-        <br><br><button id="copy-btn" onclick="copyMessage() ? this.innerText='Resultaat gekopieerd!': this.innerText='Sorry failed to copy!'">Kopieer resultaat</button>
+        <br><br><button id="copy-btn" onclick="copyMessage() ? this.innerText='Resultaat gekopieerd!': this.innerText='Oops, er ging iets mis!'">Kopieer resultaat</button>
     </div>
 </body>
 
 <script>
     var bigResult = "Er was nog geen resultaat om te kopiëren!";
     if (typeof(Storage) !== "undefined") {
+        var resultaat = localStorage.getItem('resultaat');
+        var resultaatMobile = localStorage.getItem('resultaatMobile');
+
+        if (resultaat !== "" && resultaat !== null && resultaatMobile !== "" && resultaatMobile !== null) {
+            resultaat = "";
+            resultaatMobile = "";
+            localStorage.removeItem('getal1');
+            localStorage.removeItem('getal2');
+            localStorage.removeItem('resultaat');
+            localStorage.removeItem('getal1Mobile');
+            localStorage.removeItem('getal2Mobile');
+            localStorage.removeItem('resultaatMobile');
+        }
+
         document.getElementById("getal1").value = localStorage.getItem('getal1');
         document.getElementById("getal2").value = localStorage.getItem('getal2');
         document.getElementById("resultaat").value = localStorage.getItem('resultaat');
         document.getElementById("getal1Mobile").value = localStorage.getItem('getal1Mobile');
         document.getElementById("getal2Mobile").value = localStorage.getItem('getal2Mobile');
         document.getElementById("resultaatMobile").value = localStorage.getItem('resultaatMobile');
-        var resultaat = localStorage.getItem('resultaat');
-        var resultaatMobile = localStorage.getItem('resultaatMobile');
 
         if (resultaat !== "" && resultaat !== null) {
             bigResult = resultaat;
@@ -246,7 +258,7 @@
 
             resultaat = ((getal2 - getal1) / getal1) * 100;
             resultaat = Math.round(resultaat * 100 + Number.EPSILON) / 100
-            bigResult = resultaat.toString().replace(".", ",");
+            bigResult = resultaat.toString();
 
             if (resultaat >= 0) {
                 document.getElementById("resultaat").style.borderColor = 'green';
@@ -281,7 +293,7 @@
 
             resultaatMobile = ((getal2Mobile - getal1Mobile) / getal1Mobile) * 100;
             resultaatMobile = Math.round(resultaatMobile * 100 + Number.EPSILON) / 100
-            bigResult = resultaatMobile.toString().replace(".", ",");
+            bigResult = resultaatMobile.toString();
 
             if (resultaatMobile >= 0) {
                 document.getElementById("resultaatMobile").style.borderColor = 'green';
