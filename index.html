@@ -173,7 +173,7 @@
 <body>
     <div class="layer"></div>
     <div id="voorgrond">
-        <h1>Wat is het percentage toename of afname?</h1><br>
+        <h1>Wat is het percentage toename of afname</h1><br>
         <label>Van</label>
         <input type="text" id="getal1" name="getal1" oninput="berekenen()">
         <input type="number" id="getal1Mobile" name="getal1Mobile" oninput="berekenenMobile()">
@@ -185,21 +185,33 @@
         <label class="reslutaatLabel">Resultaat</label>
         <input id="resultaat" readonly>
         <input id="resultaatMobile" readonly>
-        <br><br><button id="copy-btn" onclick="copyToClipboard() ? this.innerText='Resultaat gekopieerd!': this.innerText='Sorry failed to copy' ">Kopieer resultaat</button>
+        <br><br><button id="copy-btn" onclick="copyMessage() ? this.innerText='Resultaat gekopieerd!': this.innerText='Oops, er ging iets mis!'">Kopieer resultaat</button>
     </div>
 </body>
 
 <script>
     var bigResult = "Er was nog geen resultaat om te kopiëren!";
     if (typeof(Storage) !== "undefined") {
+        var resultaat = localStorage.getItem('resultaat');
+        var resultaatMobile = localStorage.getItem('resultaatMobile');
+
+        if (resultaat !== "" && resultaat !== null && resultaatMobile !== "" && resultaatMobile !== null) {
+            resultaat = "";
+            resultaatMobile = "";
+            localStorage.removeItem('getal1');
+            localStorage.removeItem('getal2');
+            localStorage.removeItem('resultaat');
+            localStorage.removeItem('getal1Mobile');
+            localStorage.removeItem('getal2Mobile');
+            localStorage.removeItem('resultaatMobile');
+        }
+
         document.getElementById("getal1").value = localStorage.getItem('getal1');
         document.getElementById("getal2").value = localStorage.getItem('getal2');
         document.getElementById("resultaat").value = localStorage.getItem('resultaat');
         document.getElementById("getal1Mobile").value = localStorage.getItem('getal1Mobile');
         document.getElementById("getal2Mobile").value = localStorage.getItem('getal2Mobile');
         document.getElementById("resultaatMobile").value = localStorage.getItem('resultaatMobile');
-        var resultaat = localStorage.getItem('resultaat');
-        var resultaatMobile = localStorage.getItem('resultaatMobile');
 
         if (resultaat !== "" && resultaat !== null) {
             bigResult = resultaat;
@@ -242,7 +254,7 @@
 
             resultaat = ((getal2 - getal1) / getal1) * 100;
             resultaat = Math.round(resultaat * 100 + Number.EPSILON) / 100
-            bigResult = resultaat.toString().replace(".", ",");
+            bigResult = resultaat.toString();
 
             if (resultaat >= 0) {
                 document.getElementById("resultaat").style.borderColor = 'green';
@@ -277,7 +289,7 @@
 
             resultaatMobile = ((getal2Mobile - getal1Mobile) / getal1Mobile) * 100;
             resultaatMobile = Math.round(resultaatMobile * 100 + Number.EPSILON) / 100
-            bigResult = resultaatMobile.toString().replace(".", ",");
+            bigResult = resultaatMobile.toString();
 
             if (resultaatMobile >= 0) {
                 document.getElementById("resultaatMobile").style.borderColor = 'green';
@@ -298,48 +310,25 @@
         localStorage.setItem('resultaatMobile', resultaatMobile);
     }
 
-    function copyToClipboard() {
-        let textarea;
-        let result;
-
+    function copyMessage() {
+        let copySuccess = false;
         try {
-            textarea = document.createElement('textarea');
-            textarea.setAttribute('readonly', true);
-            textarea.setAttribute('contenteditable', true);
-            textarea.style.position = 'fixed'; // prevent scroll from jumping to the bottom when focus is set.
-            textarea.value = bigResult;
-
-            document.body.appendChild(textarea);
-
-            textarea.focus();
-            textarea.select();
-
-            const range = document.createRange();
-            range.selectNodeContents(textarea);
-
-            const sel = window.getSelection();
-            sel.removeAllRanges();
-            sel.addRange(range);
-
-            textarea.setSelectionRange(0, textarea.value.length);
-            result = document.execCommand('copy');
-        } catch (err) {
-            console.error(err);
-            result = null;
-        } finally {
-            document.body.removeChild(textarea);
+            const selBox = document.createElement('textarea');
+            selBox.setAttribute('readonly', true);
+            selBox.style.position = 'fixed';
+            selBox.style.left = '0';
+            selBox.style.top = '0';
+            selBox.style.opacity = '0';
+            selBox.value = bigResult;
+            document.body.appendChild(selBox);
+            selBox.focus();
+            selBox.select();
+            copySuccess = document.execCommand('copy');
+            document.body.removeChild(selBox);
+        } catch (e) {
+            copySuccess = false;
         }
-
-        // manual copy fallback using prompt
-        if (!result) {
-            const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
-            const copyHotkey = isMac ? '⌘C' : 'CTRL+C';
-            result = prompt(`Press ${copyHotkey}`, bigResult); // eslint-disable-line no-alert
-            if (!result) {
-                return false;
-            }
-        }
-        return true;
+        return copySuccess;
     }
 
 </script>
