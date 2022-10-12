@@ -47,10 +47,6 @@
             font-weight: 550;
         }
 
-        #resultaatMobile {
-            font-weight: 550;
-        }
-
         #voorgrond {
             text-align: center;
             background-color: rgba(255, 255, 255, 0.7);
@@ -70,29 +66,8 @@
             -webkit-text-shadow: 0 0 2px #FFF;
         }
 
-        #getal1Mobile {
-            display: none;
-        }
-
-        #getal2Mobile {
-            display: none;
-        }
-
-        #getal1 {
-            display: inline-block;
-        }
-
-        #getal2 {
-            display: inline-block;
-        }
-
         #resultaat {
-            display: inline-block;
             margin-bottom: 20px;
-        }
-
-        #resultaatMobile {
-            display: none;
         }
 
         .reslutaatLabel {
@@ -115,37 +90,11 @@
                 font-size: 26px;
             }
 
-            #getal1Mobile {
-                display: inline-block;
-            }
-
-            #getal2Mobile {
-                display: inline-block;
-            }
-
-            #getal1 {
-                display: none;
-            }
-
-            #getal2 {
-                display: none;
-            }
-
             input {
                 width: 75%;
                 height: 28px;
                 font-size: 28px;
                 margin-bottom: 14px;
-            }
-
-            #resultaat {
-                display: none;
-            }
-
-            #resultaatMobile {
-                display: inline-block;
-                height: 32px;
-                font-size: 30px;
             }
 
             .reslutaatLabel {
@@ -176,69 +125,18 @@
         <h1>Wat is het percentage toename of afname?</h1><br>
         <label>Van</label>
         <input type="text" id="getal1" name="getal1" oninput="berekenen()">
-        <input type="text" id="getal1Mobile" name="getal1Mobile" oninput="berekenenMobile()">
         <br>
         <label>Naar</label>
         <input type="text" id="getal2" name="getal2" oninput="berekenen()">
-        <input type="text" id="getal2Mobile" name="getal2Mobile" oninput="berekenenMobile()">
         <br><br>
         <label class="reslutaatLabel">Resultaat</label>
         <input id="resultaat" readonly>
-        <input id="resultaatMobile" readonly>
-        <br><br><button id="copy-btn" onclick="copyMessage() ? this.innerText='Resultaat gekopieerd!': this.innerText='Oops, er ging iets mis!'">Kopieer resultaat</button>
+        <br><br><button id="copy-btn" onclick="copyMessage() ? this.innerText='Resultaat gekopieerd!' : this.innerText='Oops, er ging iets mis!'">Kopieer resultaat</button>
     </div>
 </body>
 
 <script>
     var bigResult = "Er was nog geen resultaat om te kopiëren!";
-    if (typeof(Storage) !== "undefined") {
-        var resultaat = localStorage.getItem('resultaat');
-        var resultaatMobile = localStorage.getItem('resultaatMobile');
-
-        if (resultaat !== "" && resultaat !== null && resultaatMobile !== "" && resultaatMobile !== null) {
-            resultaat = "";
-            resultaatMobile = "";
-            localStorage.removeItem('getal1');
-            localStorage.removeItem('getal2');
-            localStorage.removeItem('resultaat');
-            localStorage.removeItem('getal1Mobile');
-            localStorage.removeItem('getal2Mobile');
-            localStorage.removeItem('resultaatMobile');
-        }
-
-        document.getElementById("getal1").value = localStorage.getItem('getal1');
-        document.getElementById("getal2").value = localStorage.getItem('getal2');
-        document.getElementById("resultaat").value = localStorage.getItem('resultaat');
-        document.getElementById("getal1Mobile").value = localStorage.getItem('getal1Mobile');
-        document.getElementById("getal2Mobile").value = localStorage.getItem('getal2Mobile');
-        document.getElementById("resultaatMobile").value = localStorage.getItem('resultaatMobile');
-
-        if (resultaat !== "" && resultaat !== null) {
-            bigResult = resultaat;
-            if (resultaat >= 0) {
-                document.getElementById("resultaat").style.borderColor = 'green';
-                document.getElementById("resultaat").style.backgroundColor = 'rgb(150, 255, 150)';
-            } else {
-                document.getElementById("resultaat").style.borderColor = 'red';
-                document.getElementById("resultaat").style.backgroundColor = 'rgb(255, 150, 150)';
-            }
-
-            document.getElementById("resultaat").value = resultaat.toString().replace(".", ",") + " %";
-        }
-
-        if (resultaatMobile !== "" && resultaatMobile !== null) {
-            bigResult = resultaatMobile;
-            if (resultaatMobile >= 0) {
-                document.getElementById("resultaatMobile").style.borderColor = 'green';
-                document.getElementById("resultaatMobile").style.backgroundColor = 'rgb(150, 255, 150)';
-            } else {
-                document.getElementById("resultaatMobile").style.borderColor = 'red';
-                document.getElementById("resultaatMobile").style.backgroundColor = 'rgb(255, 150, 150)';
-            }
-
-            document.getElementById("resultaatMobile").value = resultaatMobile.toString().replace(".", ",") + " %";
-        }
-    }
 
     function berekenen() {
         var getal1 = document.getElementById("getal1").value;
@@ -248,7 +146,7 @@
         document.getElementById("getal2").value = getal2.replace(",", ".");
 
         var resultaat = Number();
-        if (getal1 !== "" && getal2 !== "") {
+        if (getal1 !== "" && getal2 !== "" && !Number.isNaN(getal1) && !Number.isNaN(getal2)) {
             getal1 = Number(getal1);
             getal2 = Number(getal2);
 
@@ -263,51 +161,19 @@
                 document.getElementById("resultaat").style.borderColor = 'red';
                 document.getElementById("resultaat").style.backgroundColor = 'rgb(255, 150, 150)';
             }
-
-            document.getElementById("resultaat").value = resultaat.toString().replace(".", ",") + " %";
+            
+            if (!Number.isNaN(resultaat)) {
+                document.getElementById("resultaat").value = resultaat.toString().replace(".", ",") + " %";
+            } else {
+                document.getElementById("resultaat").value = "";
+                document.getElementById("resultaat").style.borderColor = 'dimgrey';
+                document.getElementById("resultaat").style.backgroundColor = 'white';
+            }
         } else {
             document.getElementById("resultaat").value = "";
             document.getElementById("resultaat").style.borderColor = 'dimgrey';
             document.getElementById("resultaat").style.backgroundColor = 'white';
         }
-        localStorage.setItem('getal1', getal1);
-        localStorage.setItem('getal2', getal2);
-        localStorage.setItem('resultaat', resultaat);
-    }
-
-    function berekenenMobile() {
-        var getal1Mobile = document.getElementById("getal1Mobile").value;
-        var getal2Mobile = document.getElementById("getal2Mobile").value;
-
-        document.getElementById("getal1Mobile").value = getal1Mobile.replace(",", ".");
-        document.getElementById("getal2Mobile").value = getal2Mobile.replace(",", ".");
-
-        var resultaatMobile = Number();
-        if (getal1Mobile !== "" && getal2Mobile !== "") {
-            getal1Mobile = Number(getal1Mobile);
-            getal2Mobile = Number(getal2Mobile);
-
-            resultaatMobile = ((getal2Mobile - getal1Mobile) / getal1Mobile) * 100;
-            resultaatMobile = Math.round(resultaatMobile * 100 + Number.EPSILON) / 100
-            bigResult = resultaatMobile.toString();
-
-            if (resultaatMobile >= 0) {
-                document.getElementById("resultaatMobile").style.borderColor = 'green';
-                document.getElementById("resultaatMobile").style.backgroundColor = 'rgb(150, 255, 150)';
-            } else {
-                document.getElementById("resultaatMobile").style.borderColor = 'red';
-                document.getElementById("resultaatMobile").style.backgroundColor = 'rgb(255, 150, 150)';
-            }
-
-            document.getElementById("resultaatMobile").value = resultaatMobile.toString().replace(".", ",") + " %";
-        } else {
-            document.getElementById("resultaatMobile").value = "";
-            document.getElementById("resultaatMobile").style.borderColor = 'dimgrey';
-            document.getElementById("resultaatMobile").style.backgroundColor = 'white';
-        }
-        localStorage.setItem('getal1Mobile', getal1Mobile);
-        localStorage.setItem('getal2Mobile', getal2Mobile);
-        localStorage.setItem('resultaatMobile', resultaatMobile);
     }
 
     function copyMessage() {
