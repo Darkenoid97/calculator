@@ -138,6 +138,42 @@
 <script>
     var bigResult = "Er was nog geen resultaat om te kopiëren!";
 
+    if (typeof(Storage) !== "undefined") {
+        var storedResultaat = localStorage.getItem('resultaat');
+        var storedGetal1 = localStorage.getItem('getal1');
+        var storedGetal2 = localStorage.getItem('getal2');
+        
+        if (Number.isNaN(Number(storedResultaat)) || Number.isNaN(Number(storedGetal1)) || Number.isNaN(Number(storedGetal2))) {
+            storedResultaat = "";
+            storedGetal1 = "";
+            storedGetal2 = "";
+            localStorage.removeItem('getal1');
+            localStorage.removeItem('getal2');
+            localStorage.removeItem('resultaat');
+        }
+
+        document.getElementById("getal1").value = storedGetal1;
+        document.getElementById("getal2").value = storedGetal2;
+        document.getElementById("resultaat").value = storedResultaat;
+
+        if (storedResultaat !== "" && storedResultaat !== null) {
+            bigResult = storedResultaat;
+            if (storedResultaat >= 0) {
+                document.getElementById("resultaat").style.borderColor = 'green';
+                document.getElementById("resultaat").style.backgroundColor = 'rgb(150, 255, 150)';
+            } else {
+                document.getElementById("resultaat").style.borderColor = 'red';
+                document.getElementById("resultaat").style.backgroundColor = 'rgb(255, 150, 150)';
+            }
+
+            if (!Number.isNaN(storedResultaat)) {
+                document.getElementById("resultaat").value = storedResultaat.toString().replace(".", ",") + " %";
+            } else {
+                resetResult();
+            }
+        }
+    }
+
     function berekenen() {
         var getal1 = document.getElementById("getal1").value;
         var getal2 = document.getElementById("getal2").value;
@@ -165,15 +201,14 @@
             if (!Number.isNaN(resultaat)) {
                 document.getElementById("resultaat").value = resultaat.toString().replace(".", ",") + " %";
             } else {
-                document.getElementById("resultaat").value = "";
-                document.getElementById("resultaat").style.borderColor = 'dimgrey';
-                document.getElementById("resultaat").style.backgroundColor = 'white';
+                resetResult();
             }
         } else {
-            document.getElementById("resultaat").value = "";
-            document.getElementById("resultaat").style.borderColor = 'dimgrey';
-            document.getElementById("resultaat").style.backgroundColor = 'white';
+            resetResult();
         }
+        localStorage.setItem('getal1', getal1);
+        localStorage.setItem('getal2', getal2);
+        localStorage.setItem('resultaat', resultaat);
     }
 
     function copyMessage() {
@@ -195,6 +230,12 @@
             copySuccess = false;
         }
         return copySuccess;
+    }
+
+    function resetResult() {
+        document.getElementById("resultaat").value = "";
+        document.getElementById("resultaat").style.borderColor = 'dimgrey';
+        document.getElementById("resultaat").style.backgroundColor = 'white';
     }
 
 </script>
