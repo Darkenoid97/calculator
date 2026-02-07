@@ -6,8 +6,10 @@
     <link rel="icon" type="image/png" href="https://cdn.jim-nielsen.com/ios/512/calculator-2017-10-10.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script>
-        fetch('https://source.unsplash.com/1920x1080').then((response) => {
-            document.body.style.backgroundImage = "url(" + response.url + ")";
+        const width = Math.min(window.innerWidth, 2000);
+        const height = Math.min(window.innerHeight, 2000);
+        fetch(`https://picsum.photos/${width}/${height}`).then(res => {
+            document.body.style.backgroundImage = `url(${res.url})`;
         });
     </script>
     <style>
@@ -83,6 +85,10 @@
         }
 
         @media only screen and (max-width: 600px) {
+            body {
+                background-position: center top;
+            }
+
             h1 {
                 padding: 0px 20px;
                 margin-top: 25px;
