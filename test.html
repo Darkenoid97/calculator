@@ -7,19 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#000000">
-    <script>
-        const width = Math.min(window.innerWidth, 2000);
-        const height = Math.min(window.innerHeight, 2000);
-        fetch(`https://picsum.photos/${width}/${height}`)
-            .then(res => {
-                const url = `url(${res.url})`;
-                // Set background on html
-                document.documentElement.style.backgroundImage = url;
-            });
-    </script>
     <style>
         html {
-            height: 100%;
             background-color: #000; /* fallback */
             background-size: cover;
             background-position: center;
@@ -42,7 +31,19 @@
 </head>
 
 <body>
-    
+    <script>
+        const width = Math.min(window.innerWidth, 2000);
+        const height = Math.min(window.innerHeight, 2000);
+        fetch(`https://picsum.photos/${width}/${height}`)
+            .then(res => {
+                const url = `url(${res.url})`;
+                // Set background on html
+                document.documentElement.style.backgroundImage = url;
+                document.documentElement.style.backgroundSize = 'cover';
+                document.documentElement.style.backgroundPosition = 'center';
+                document.documentElement.style.backgroundRepeat = 'no-repeat';
+            });
+    </script>
 </body>
 
 </html>
