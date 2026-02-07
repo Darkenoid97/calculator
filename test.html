@@ -33,6 +33,7 @@
 
 <body>
     <script>
+        document.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
         window.addEventListener('load', () => {
             setTimeout(() => {
                 window.scrollTo(0, 100); // scroll down 1px
@@ -48,8 +49,7 @@
                 document.documentElement.style.backgroundSize = 'cover';
                 document.documentElement.style.backgroundPosition = 'center';
                 document.documentElement.style.backgroundRepeat = 'no-repeat';
-                document.documentElement.style.position = 'fixed';
-                document.documentElement.style.top = '-100px';
+                
             });
     </script>
 </body>
