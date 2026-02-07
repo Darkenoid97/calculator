@@ -6,8 +6,8 @@
     <link rel="icon" type="image/png" href="https://cdn.jim-nielsen.com/ios/512/calculator-2017-10-10.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script>
-        const width = Math.min(document.documentElement.clientWidth, 2000);
-        const height = Math.min(document.documentElement.clientHeight, 2000);
+        const width = Math.min(window.innerWidth, 2000);
+        const height = Math.min(window.innerHeight, 2000);
         fetch(`https://picsum.photos/${width}/${height}`).then(res => {
             document.body.style.backgroundImage = `url(${res.url})`;
         });
@@ -24,7 +24,7 @@
             background-attachment: fixed;
             background-size: cover;
             width: 100%;
-            height: 100vh;
+            height: 100svh;
         }
 
         h1 {
@@ -109,7 +109,7 @@
 
             #voorgrond {
                 width: 100%;
-                height: 100vh;
+                height: 100svh;
                 border-radius: 0px;
                 padding: 0px;
                 margin: 0px;
