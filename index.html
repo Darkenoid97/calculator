@@ -6,6 +6,7 @@
     <link rel="icon" type="image/png" href="https://cdn.jim-nielsen.com/ios/512/calculator-2017-10-10.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script>
+        document.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
         window.addEventListener('load', () => {
             const width = Math.min(window.innerWidth, 2000);
             const height = Math.min(window.innerHeight, 2000);
