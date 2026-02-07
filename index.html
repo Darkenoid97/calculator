@@ -5,13 +5,6 @@
     <title>Calculator</title>
     <link rel="icon" type="image/png" href="https://cdn.jim-nielsen.com/ios/512/calculator-2017-10-10.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script>
-        const width = Math.min(document.body.clientWidth, 2000);
-        const height = Math.min(document.body.clientHeight, 2000);
-        fetch(`https://picsum.photos/${width}/${height}`).then(res => {
-            document.body.style.backgroundImage = `url(${res.url})`;
-        });
-    </script>
     <style>
         body {
             text-align: center;
@@ -144,6 +137,13 @@
         <input id="resultaat" readonly>
         <br><br><button id="copy-btn" onclick="copyMessage() ? this.innerText='Resultaat gekopieerd!' : this.innerText='Oops, er ging iets mis!'">Kopieer resultaat</button>
     </div>
+    <script>
+        const width = Math.min(document.body.clientWidth, 2000);
+        const height = Math.min(document.body.clientHeight, 2000);
+        fetch(`https://picsum.photos/${width}/${height}`).then(res => {
+            document.body.style.backgroundImage = `url(${res.url})`;
+        });
+    </script>
 </body>
 
 <script>
