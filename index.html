@@ -18,7 +18,12 @@
             });
             if (width < 600) {
                 setTimeout(() => {
-                    window.scrollTo(0, 100); // scroll down 1px
+                    window.scrollTo(0, 100);
+                    document.documentElement.style.position = 'fixed';
+                    document.documentElement.style.top = '-100px';
+                    document.documentElement.style.left = '0';
+                    document.documentElement.style.right = '0';
+                    document.documentElement.style.width = '100%';
                 }, 50);
             }
         });
@@ -33,7 +38,7 @@
             text-align: center;
             font-family: Tahoma, Geneva, sans-serif;
             color: rgb(50, 50, 50);
-            background-color: #000; /* fallback */
+            background-color: #000;
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
