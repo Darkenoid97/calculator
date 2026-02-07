@@ -8,9 +8,19 @@
     <script>
         const width = Math.min(window.innerWidth, 2000);
         const height = Math.min(window.innerHeight, 2000);
-        fetch(`https://picsum.photos/${width}/${height}`).then(res => {
-            document.body.style.backgroundImage = `url(${res.url})`;
-        });
+        fetch(`https://picsum.photos/${width}/${height}`)
+            .then(res => {
+                const url = `url(${res.url})`;
+                // Set background on body
+                document.body.style.backgroundImage = url;
+                document.body.style.backgroundSize = 'cover';
+                document.body.style.backgroundPosition = 'center';
+                
+                // Set background on html
+                document.documentElement.style.backgroundImage = url;
+                document.documentElement.style.backgroundSize = 'cover';
+                document.documentElement.style.backgroundPosition = 'center';
+            });
     </script>
     <style>
         html, body {
