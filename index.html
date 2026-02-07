@@ -138,8 +138,8 @@
         <br><br><button id="copy-btn" onclick="copyMessage() ? this.innerText='Resultaat gekopieerd!' : this.innerText='Oops, er ging iets mis!'">Kopieer resultaat</button>
     </div>
     <script>
-        const width = Math.min(document.body.clientWidth, 2000);
-        const height = Math.min(document.body.clientHeight, 2000);
+        const width = Math.min(document.documentElement.scrollWidth, 2000);
+        const height = Math.min(document.documentElement.scrollHeight, 2000);
         fetch(`https://picsum.photos/${width}/${height}`).then(res => {
             document.body.style.backgroundImage = `url(${res.url})`;
         });
