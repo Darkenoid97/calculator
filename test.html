@@ -33,6 +33,11 @@
 
 <body>
     <script>
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                window.scrollTo(0, 50); // scroll down 1px
+            }, 50);
+        });
         const width = Math.min(window.innerWidth, 2000);
         const height = Math.min(window.innerHeight, 2000);
         fetch(`https://picsum.photos/${width}/${height}`)
