@@ -48,7 +48,7 @@
                     }
 
                     if (!Number.isNaN(storedResultaat)) {
-                        document.getElementById("resultaat").value = storedResultaat.toString().replace(".", ",") + " %";
+                        document.getElementById("resultaat").value = normalizeNumber(storedResultaat.toString()) + " %";
                     } else {
                         resetResult();
                     }
@@ -60,8 +60,8 @@
             var getal1 = document.getElementById("getal1").value;
             var getal2 = document.getElementById("getal2").value;
 
-            document.getElementById("getal1").value = getal1.replace(",", ".");
-            document.getElementById("getal2").value = getal2.replace(",", ".");
+            document.getElementById("getal1").value = normalizeNumber(getal1);
+            document.getElementById("getal2").value = normalizeNumber(getal2);
 
             var resultaat = Number();
             if (getal1 !== "" && getal2 !== "" && !Number.isNaN(Number(getal1)) && !Number.isNaN(getal2)) {
@@ -86,7 +86,7 @@
                 }
                 
                 if (!Number.isNaN(resultaat)) {
-                    document.getElementById("resultaat").value = resultaat.toString().replace(".", ",") + " %";
+                    document.getElementById("resultaat").value = normalizeNumber(resultaat.toString()) + " %";
                 } else {
                     resetResult();
                 }
@@ -96,6 +96,15 @@
             localStorage.setItem('getal1', getal1);
             localStorage.setItem('getal2', getal2);
             localStorage.setItem('resultaat', resultaat);
+        }
+
+        function normalizeNumber(value) {
+            value = value.replace(",", ".");
+            const parts = value.split(".");
+            if (parts.length > 2) {
+                value = parts[0] + "." + parts.slice(1).join("");
+            }
+            return value;
         }
 
         function resetResult() {
