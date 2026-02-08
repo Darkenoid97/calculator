@@ -6,7 +6,133 @@
     <link rel="icon" type="image/png" href="https://cdn.jim-nielsen.com/ios/512/calculator-2017-10-10.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script>
+        let bigResult = "Er was nog geen resultaat om te kopiëren!";
+        let resizeTimeout;
+
         window.addEventListener('load', () => {
+            window.addEventListener("resize", () => {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(setBackground, 200);
+            });
+            appInit();
+            setBackground();
+        });
+
+        function appInit() {
+            if (typeof(Storage) !== "undefined") {
+                var storedResultaat = localStorage.getItem('resultaat');
+                var storedGetal1 = localStorage.getItem('getal1');
+                var storedGetal2 = localStorage.getItem('getal2');
+                
+                if (Number.isNaN(Number(storedResultaat)) || Number.isNaN(Number(storedGetal1)) || Number.isNaN(Number(storedGetal2))) {
+                    storedResultaat = "";
+                    storedGetal1 = "";
+                    storedGetal2 = "";
+                    localStorage.removeItem('getal1');
+                    localStorage.removeItem('getal2');
+                    localStorage.removeItem('resultaat');
+                }
+
+                document.getElementById("getal1").value = storedGetal1;
+                document.getElementById("getal2").value = storedGetal2;
+                document.getElementById("resultaat").value = storedResultaat;
+
+                if (storedResultaat !== "" && storedResultaat !== null) {
+                    bigResult = storedResultaat;
+                    if (storedResultaat >= 0) {
+                        document.getElementById("resultaat").style.borderColor = 'green';
+                        document.getElementById("resultaat").style.backgroundColor = 'rgb(150, 255, 150)';
+                    } else {
+                        document.getElementById("resultaat").style.borderColor = 'red';
+                        document.getElementById("resultaat").style.backgroundColor = 'rgb(255, 150, 150)';
+                    }
+
+                    if (!Number.isNaN(storedResultaat)) {
+                        document.getElementById("resultaat").value = storedResultaat.toString().replace(".", ",") + " %";
+                    } else {
+                        resetResult();
+                    }
+                }
+            }
+        }
+
+        function berekenen() {
+            var getal1 = document.getElementById("getal1").value;
+            var getal2 = document.getElementById("getal2").value;
+
+            document.getElementById("getal1").value = getal1.replace(",", ".");
+            document.getElementById("getal2").value = getal2.replace(",", ".");
+
+            var resultaat = Number();
+            if (getal1 !== "" && getal2 !== "" && !Number.isNaN(Number(getal1)) && !Number.isNaN(getal2)) {
+                getal1 = Number(getal1);
+                getal2 = Number(getal2);
+
+                if (getal1 === 0) {
+                    resetResult();
+                    return;
+                }
+
+                resultaat = ((getal2 - getal1) / getal1) * 100;
+                resultaat = Math.round(resultaat * 100 + Number.EPSILON) / 100
+                bigResult = resultaat.toString();
+
+                if (resultaat >= 0) {
+                    document.getElementById("resultaat").style.borderColor = 'green';
+                    document.getElementById("resultaat").style.backgroundColor = 'rgb(150, 255, 150)';
+                } else {
+                    document.getElementById("resultaat").style.borderColor = 'red';
+                    document.getElementById("resultaat").style.backgroundColor = 'rgb(255, 150, 150)';
+                }
+                
+                if (!Number.isNaN(resultaat)) {
+                    document.getElementById("resultaat").value = resultaat.toString().replace(".", ",") + " %";
+                } else {
+                    resetResult();
+                }
+            } else {
+                resetResult();
+            }
+            localStorage.setItem('getal1', getal1);
+            localStorage.setItem('getal2', getal2);
+            localStorage.setItem('resultaat', resultaat);
+        }
+
+        function resetResult() {
+            document.getElementById("resultaat").value = "";
+            document.getElementById("resultaat").style.borderColor = 'dimgrey';
+            document.getElementById("resultaat").style.backgroundColor = 'white';
+        }
+
+        async function copyMessage() {
+            let copySuccess = false;
+            try {
+                await navigator.clipboard.writeText(bigResult);
+                copySuccess = true;
+                return true;
+            } catch {
+                copySuccess = false;
+                return false;
+            }
+        }
+
+        function preventTouchMove(e) {
+            e.preventDefault();
+        }
+
+        function handleFocusOut(event) {
+            if (event.target.matches('input[type="number"]')) {
+                scrollToBackgroundFill();
+            }
+        }
+
+        function scrollToBackgroundFill() {
+            setTimeout(() => {
+                window.scrollTo(0, 100);
+            }, 50);
+        }
+
+        function setBackground() {
             const width = Math.min(window.innerWidth, 2000);
             const height = Math.min(window.innerHeight, 2000);
             fetch(`https://picsum.photos/${width}/${height}`)
@@ -15,23 +141,19 @@
                     document.documentElement.style.backgroundImage = url;
                     document.documentElement.style.backgroundSize = 'cover';
                     document.documentElement.style.backgroundPosition = 'center';
+            }).catch(() => {
+                document.documentElement.style.backgroundImage = "none";
+                document.documentElement.style.backgroundColor = "#000";
             });
             if (width < 600) {
-                document.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
-                setTimeout(() => {
-                    window.scrollTo(0, 100);
-                }, 50);
-            
-                document.addEventListener("focusout", function (event) {
-                    if (event.target.matches('input[type="text"]')) {
-                        setTimeout(() => {
-                            window.scrollTo(0, 100);
-                        }, 50);
-                    }
-                });
+                document.addEventListener("touchmove", preventTouchMove, { passive: false });
+                document.addEventListener("focusout", handleFocusOut);
+                scrollToBackgroundFill();
+            } else {
+                document.removeEventListener("touchmove", preventTouchMove, { passive: false });
+                document.removeEventListener("focusout", handleFocusOut);
             }
-        });
-        
+        }
     </script>
     <style>
         html {
@@ -51,10 +173,6 @@
         body {
             min-height: 100%;
             margin: 0;
-            padding-top: env(safe-area-inset-top);
-            padding-bottom: env(safe-area-inset-bottom);
-            padding-left: env(safe-area-inset-left);
-            padding-right: env(safe-area-inset-right);
         }
 
         h1 {
@@ -103,7 +221,7 @@
             margin-bottom: 20px;
         }
 
-        .reslutaatLabel {
+        .resultaatLabel {
             margin-top: 10px;
         }
 
@@ -133,7 +251,7 @@
                 margin-bottom: 14px;
             }
 
-            .reslutaatLabel {
+            .resultaatLabel {
                 margin-top: 10px;
             }
 
@@ -157,6 +275,11 @@
         @media only screen and (min-width: 600px) and (max-height: 800px) {
             #voorgrond {
                 margin: 2em;
+                padding: 40px;
+            }
+
+            h1 {
+                margin-bottom: 30px;
             }
         }
     </style>
@@ -167,120 +290,15 @@
     <div id="voorgrond">
         <h1>Wat is het percentage toename of afname?</h1><br>
         <label>Van</label>
-        <input type="text" id="getal1" name="getal1" oninput="berekenen()">
+        <input type="number" step="any" inputmode="decimal" id="getal1" name="getal1" oninput="berekenen()">
         <br>
         <label>Naar</label>
-        <input type="text" id="getal2" name="getal2" oninput="berekenen()">
+        <input type="number" step="any" inputmode="decimal" id="getal2" name="getal2" oninput="berekenen()">
         <br><br>
-        <label class="reslutaatLabel">Resultaat</label>
+        <label class="resultaatLabel">Resultaat</label>
         <input id="resultaat" readonly>
         <br><br><button id="copy-btn" onclick="copyMessage() ? this.innerText='Resultaat gekopieerd!' : this.innerText='Oops, er ging iets mis!'">Kopieer resultaat</button>
     </div>
 </body>
-
-<script>
-    var bigResult = "Er was nog geen resultaat om te kopiëren!";
-
-    if (typeof(Storage) !== "undefined") {
-        var storedResultaat = localStorage.getItem('resultaat');
-        var storedGetal1 = localStorage.getItem('getal1');
-        var storedGetal2 = localStorage.getItem('getal2');
-        
-        if (Number.isNaN(Number(storedResultaat)) || Number.isNaN(Number(storedGetal1)) || Number.isNaN(Number(storedGetal2))) {
-            storedResultaat = "";
-            storedGetal1 = "";
-            storedGetal2 = "";
-            localStorage.removeItem('getal1');
-            localStorage.removeItem('getal2');
-            localStorage.removeItem('resultaat');
-        }
-
-        document.getElementById("getal1").value = storedGetal1;
-        document.getElementById("getal2").value = storedGetal2;
-        document.getElementById("resultaat").value = storedResultaat;
-
-        if (storedResultaat !== "" && storedResultaat !== null) {
-            bigResult = storedResultaat;
-            if (storedResultaat >= 0) {
-                document.getElementById("resultaat").style.borderColor = 'green';
-                document.getElementById("resultaat").style.backgroundColor = 'rgb(150, 255, 150)';
-            } else {
-                document.getElementById("resultaat").style.borderColor = 'red';
-                document.getElementById("resultaat").style.backgroundColor = 'rgb(255, 150, 150)';
-            }
-
-            if (!Number.isNaN(storedResultaat)) {
-                document.getElementById("resultaat").value = storedResultaat.toString().replace(".", ",") + " %";
-            } else {
-                resetResult();
-            }
-        }
-    }
-
-    function berekenen() {
-        var getal1 = document.getElementById("getal1").value;
-        var getal2 = document.getElementById("getal2").value;
-
-        document.getElementById("getal1").value = getal1.replace(",", ".");
-        document.getElementById("getal2").value = getal2.replace(",", ".");
-
-        var resultaat = Number();
-        if (getal1 !== "" && getal2 !== "" && !Number.isNaN(getal1) && !Number.isNaN(getal2)) {
-            getal1 = Number(getal1);
-            getal2 = Number(getal2);
-
-            resultaat = ((getal2 - getal1) / getal1) * 100;
-            resultaat = Math.round(resultaat * 100 + Number.EPSILON) / 100
-            bigResult = resultaat.toString();
-
-            if (resultaat >= 0) {
-                document.getElementById("resultaat").style.borderColor = 'green';
-                document.getElementById("resultaat").style.backgroundColor = 'rgb(150, 255, 150)';
-            } else {
-                document.getElementById("resultaat").style.borderColor = 'red';
-                document.getElementById("resultaat").style.backgroundColor = 'rgb(255, 150, 150)';
-            }
-            
-            if (!Number.isNaN(resultaat)) {
-                document.getElementById("resultaat").value = resultaat.toString().replace(".", ",") + " %";
-            } else {
-                resetResult();
-            }
-        } else {
-            resetResult();
-        }
-        localStorage.setItem('getal1', getal1);
-        localStorage.setItem('getal2', getal2);
-        localStorage.setItem('resultaat', resultaat);
-    }
-
-    function copyMessage() {
-        let copySuccess = false;
-        try {
-            const selBox = document.createElement('textarea');
-            selBox.setAttribute('readonly', true);
-            selBox.style.position = 'fixed';
-            selBox.style.left = '0';
-            selBox.style.top = '0';
-            selBox.style.opacity = '0';
-            selBox.value = bigResult;
-            document.body.appendChild(selBox);
-            selBox.focus();
-            selBox.select();
-            copySuccess = document.execCommand('copy');
-            document.body.removeChild(selBox);
-        } catch (e) {
-            copySuccess = false;
-        }
-        return copySuccess;
-    }
-
-    function resetResult() {
-        document.getElementById("resultaat").value = "";
-        document.getElementById("resultaat").style.borderColor = 'dimgrey';
-        document.getElementById("resultaat").style.backgroundColor = 'white';
-    }
-
-</script>
 
 </html>
