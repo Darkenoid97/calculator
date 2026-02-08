@@ -35,7 +35,7 @@
 
                 document.getElementById("getal1").value = storedGetal1;
                 document.getElementById("getal2").value = storedGetal2;
-                document.getElementById("resultaat").value = storedResultaat;
+                document.getElementById("resultaat").innerHTML = storedResultaat;
 
                 if (storedResultaat !== "" && storedResultaat !== null) {
                     bigResult = storedResultaat;
@@ -48,7 +48,7 @@
                     }
 
                     if (!Number.isNaN(storedResultaat)) {
-                        document.getElementById("resultaat").value = normalizeNumber(storedResultaat.toString()) + " %";
+                        document.getElementById("resultaat").innerHTML = normalizeNumber(storedResultaat.toString()) + " %";
                     } else {
                         resetResult();
                     }
@@ -87,7 +87,7 @@
                 }
                 
                 if (!Number.isNaN(resultaat)) {
-                    document.getElementById("resultaat").value = normalizeNumber(resultaat.toString()) + " %";
+                    document.getElementById("resultaat").innerHTML = normalizeNumber(resultaat.toString()) + " %";
                 } else {
                     resetResult();
                 }
@@ -122,7 +122,7 @@
         }
 
         function resetResult() {
-            document.getElementById("resultaat").value = "";
+            document.getElementById("resultaat").innerHTML = "";
             document.getElementById("resultaat").style.borderColor = 'dimgrey';
             document.getElementById("resultaat").style.backgroundColor = 'white';
         }
@@ -218,13 +218,17 @@
         }
 
         #resultaat {
-            font-weight: 550;
-            user-select: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            cursor: default;
-            pointer-events: none;
+            font-weight: bold;
+            border: 3px solid dimgrey;
+            width: 300px;
+            height: 38px;
+            font-size: 30px;
+            text-align: center;
+            color: rgb(80, 80, 80);
+            border-radius: 10px;
+            margin-bottom: 40px;
+            margin-bottom: 20px;
+            display: inline-block;
         }
 
         #voorgrond {
@@ -238,20 +242,12 @@
 
         label {
             font-weight: 600;
-            font-size: 18px;
+            font-size: 22px;
             display: block;
             margin-bottom: 14px;
             text-shadow: 0 0 2px #FFF;
             -moz-text-shadow: 0 0 2px #FFF;
             -webkit-text-shadow: 0 0 2px #FFF;
-        }
-
-        #resultaat {
-            margin-bottom: 20px;
-        }
-
-        .resultaatLabel {
-            margin-top: 10px;
         }
 
         #copy-btn {
@@ -280,8 +276,11 @@
                 margin-bottom: 14px;
             }
 
-            .resultaatLabel {
-                margin-top: 10px;
+            #resultaat {
+                width: 75%;
+                height: 34px;
+                font-size: 28px;
+                margin-bottom: 14px;
             }
 
             #voorgrond {
@@ -297,7 +296,7 @@
 
             label {
                 font-size: 18px;
-                margin-bottom: 4px;
+                margin-bottom: 8px;
             }
         }
 
@@ -338,8 +337,8 @@
             oninput="berekenen()"
         >
         <br><br>
-        <label class="resultaatLabel">Resultaat</label>
-        <input id="resultaat" readonly disabled>
+        <label>Resultaat</label>
+        <div id="resultaat"></div>
         <br><br><button id="copy-btn" onclick="copyMessage() ? this.innerText='Resultaat gekopieerd!' : this.innerText='Oops, er ging iets mis!'">Kopieer resultaat</button>
     </div>
 </body>
