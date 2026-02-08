@@ -290,10 +290,24 @@
     <div id="voorgrond">
         <h1>Wat is het percentage toename of afname?</h1><br>
         <label>Van</label>
-        <input type="number" step="any" inputmode="decimal" id="getal1" name="getal1" oninput="berekenen()">
+        <input
+            type="text"
+            inputmode="decimal"
+            pattern="[0-9.,]*"
+            id="getal1"
+            name="getal1"
+            oninput="berekenen()"
+        >
         <br>
         <label>Naar</label>
-        <input type="number" step="any" inputmode="decimal" id="getal2" name="getal2" oninput="berekenen()">
+        <input
+            type="text"
+            inputmode="decimal"
+            pattern="[0-9.,]*"
+            id="getal2"
+            name="getal2"
+            oninput="berekenen()"
+        >
         <br><br>
         <label class="resultaatLabel">Resultaat</label>
         <input id="resultaat" readonly>
