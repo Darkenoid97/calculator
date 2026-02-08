@@ -21,6 +21,14 @@
                 setTimeout(() => {
                     window.scrollTo(0, 100);
                 }, 50);
+            
+                document.addEventListener("focusout", function (event) {
+                    if (event.target.matches('input[type="text"]')) {
+                        setTimeout(() => {
+                            window.scrollTo(0, 100);
+                        }, 50);
+                    }
+                });
             }
         });
         
