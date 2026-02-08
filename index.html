@@ -219,6 +219,12 @@
 
         #resultaat {
             font-weight: 550;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            cursor: default;
+            pointer-events: none;
         }
 
         #voorgrond {
@@ -333,7 +339,7 @@
         >
         <br><br>
         <label class="resultaatLabel">Resultaat</label>
-        <input id="resultaat" readonly>
+        <input id="resultaat" readonly disabled>
         <br><br><button id="copy-btn" onclick="copyMessage() ? this.innerText='Resultaat gekopieerd!' : this.innerText='Oops, er ging iets mis!'">Kopieer resultaat</button>
     </div>
 </body>
